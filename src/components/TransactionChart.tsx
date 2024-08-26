@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchTransactions } from "../api/transactions";
 import { useEffect } from "react";
-import { Spinner, useToast } from "@chakra-ui/react";
+import { Alert, AlertTitle, Spinner, useToast } from "@chakra-ui/react";
 import { EChart } from "@kbox-labs/react-echarts";
 
 function TransactionChart() {
@@ -11,11 +11,10 @@ function TransactionChart() {
     queryKey: ["transactions"],
     queryFn: fetchTransactions,
     retry: 1,
-    // refetchInterval: 60 * 1000, // every one minute
+    refetchInterval: 60 * 1000, // every one minute
   });
 
   useEffect(() => {
-    console.log(error);
     if (error) {
       toast({
         status: "error",
@@ -26,7 +25,12 @@ function TransactionChart() {
 
   if (isLoading) return <Spinner />;
 
-  if (!data) return <p>No data</p>;
+  if (!data)
+    return (
+      <Alert status="warning">
+        <AlertTitle>No data</AlertTitle>
+      </Alert>
+    );
 
   return (
     <EChart
@@ -35,23 +39,30 @@ function TransactionChart() {
         width: "100%",
       }}
       tooltip={{
-        trigger: "axis",
+        trigger: "item",
       }}
       xAxis={{
         type: "time",
+        name: "Transaction time",
+        nameGap: 20,
+        nameTextStyle: {
+          fontWeight: "bold",
+        },
       }}
       yAxis={{
         type: "value",
+        min: "dataMin",
+        max: "dataMax",
+        name: "Transaction price",
+        nameGap: 20,
+        nameTextStyle: {
+          fontWeight: "bold",
+        },
       }}
       series={[
         {
           name: "Price",
           data: data.map((value) => [value.time, value.price]),
-          type: "line",
-        },
-        {
-          name: "Quantity",
-          data: data.map((value) => [value.time, value.qty]),
           type: "line",
         },
       ]}
