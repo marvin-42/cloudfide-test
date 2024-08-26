@@ -1,13 +1,18 @@
 import "./App.css";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, Container } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import TransactionChart from "./components/TransactionChart";
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ChakraProvider></ChakraProvider>
+      <ChakraProvider>
+        <Container>
+          <TransactionChart />
+        </Container>
+      </ChakraProvider>
     </QueryClientProvider>
   );
 }
