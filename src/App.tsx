@@ -9,7 +9,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ChakraProvider>
-        <Container>
+        <Container maxW="container.xl">
           <TransactionChart />
         </Container>
       </ChakraProvider>
